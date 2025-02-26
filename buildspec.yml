@@ -4,23 +4,22 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPOSITORY_NAME
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 715841334841.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URI=715841334841.dkr.ecr.us-east-1.amazonaws.com/cicd_demo
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 
   build:
-    commands:
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
       - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
 
   post_build:
     commands:
-      - echo Pushing the Docker image to Amazon ECR...
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - docker push $REPOSITORY_URI:latest
+      
+      - echo Pushing the Image into ECR
+      - docker push docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"your-container-name","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"cicd_demo","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files: 
