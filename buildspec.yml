@@ -24,7 +24,7 @@ phases:
     commands:
       
       - echo Pushing the Image into ECR
-      - docker push docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push  $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
       - printf '[{"name":"cicd_demo","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
