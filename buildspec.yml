@@ -8,7 +8,8 @@ phases:
   pre_build:
     commands:
       - echo "Checking Docker..."
-      - echo "$SwaHivanse228" | docker login --username "$swatihivanse" --password-stdin
+      - DOCKER_USERNAME=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r '.docker_username')
+      - DOCKER_PASSWORD=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r '.docker_password')
       - docker info
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 715841334841.dkr.ecr.us-east-1.amazonaws.com
